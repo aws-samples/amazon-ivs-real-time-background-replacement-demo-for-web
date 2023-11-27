@@ -363,7 +363,7 @@ backgroundChangeBtn.addEventListener("click", async function (event) {
   var requestBodyJSON = JSON.stringify(requestBody);
 
   // Make a POST request using the Fetch API
-  const response = await fetch("https://cjhur3yhnl.execute-api.us-west-2.amazonaws.com/test/image", {
+  const response = await fetch("<INSERT YOUR LAMBDA URL HERE>", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
