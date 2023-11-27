@@ -1,0 +1,106 @@
+/*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. SPDX-License-Identifier: Apache-2.0 */
+
+html,
+body {
+  margin: 2rem;
+  box-sizing: border-box;
+  height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+hr {
+  margin: 1rem 0;
+}
+
+table {
+  display: table;
+}
+
+canvas {
+  margin-bottom: 1rem;
+  background: green;
+}
+
+video {
+  margin-bottom: 1rem;
+  background: black;
+  max-width: 100%;
+  max-height: 150px;
+}
+
+.log {
+  flex: none;
+  height: 300px;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
+.button {
+  display: block;
+  margin: 0 auto;
+}
+
+.local-container {
+  position: relative;
+}
+
+.static-controls {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  bottom: -4rem;
+  text-align: center;
+}
+
+.static-controls button {
+  display: inline-block;
+}
+
+.hidden {
+  display: none;
+}
+
+.participant-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 1rem;
+}
+
+video {
+  border: 0.5rem solid #555;
+  border-radius: 0.5rem;
+}
+.placeholder {
+  background-color: #333333;
+  display: flex;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.placeholder span {
+  margin: auto;
+  color: white;
+}
+#local-media {
+  display: inline-block;
+  width: 100vw;
+}
+
+#local-media video {
+  max-height: 300px;
+}
+
+#remote-media {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+}

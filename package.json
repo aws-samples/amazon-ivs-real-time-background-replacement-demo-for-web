@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.6",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.3",
+    "path": "^0.12.7",
+    "style-loader": "^3.3.3"
+  },
+  "name": "ivs-stages-simple-background-replacement",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}

@@ -1,0 +1,111 @@
+<!--
+/*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. SPDX-License-Identifier: Apache-2.0 */
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Amazon IVS Real-Time Streaming With Background Replacement Web Sample (HTML and JavaScript)</title>
+
+    <!-- Fonts and Styling -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css" />
+    <link rel="stylesheet" href="https://d1l5n2avb89axj.cloudfront.net/index.css" />
+    <link rel="stylesheet" href="https://d1l5n2avb89axj.cloudfront.net/modal.css" />
+
+    <!-- Stages in Broadcast SDK -->
+    <script src="https://web-broadcast.live-video.net/1.6.0/amazon-ivs-web-broadcast.js"></script>
+  </head>
+
+  <body>
+    <!-- Introduction -->
+    <header>
+      <h1>Amazon IVS Real-Time Streaming Web Sample (HTML and JavaScript)</h1>
+
+      <p>
+        This sample is used to demonstrate basic HTML / JS usage. <b><a href="https://docs.aws.amazon.com/ivs/latest/userguide/multiple-hosts.html">Use the AWS CLI</a></b> to
+        create a <b>Stage</b> and a corresponding <b>ParticipantToken</b>. Multiple participants can load this page and put in their own tokens. You can
+        <b><a href="https://aws.github.io/amazon-ivs-web-broadcast/docs/sdk-guides/stages#glossary" target="_blank">read more about stages in our public docs.</a></b>
+      </p>
+    </header>
+    <hr />
+
+    <!-- Setup Controls -->
+    <div class="row">
+      <!-- <div class="column">
+        <label for="video-devices">Select Camera</label>
+        <select disabled id="video-devices">
+          <option selected disabled>Choose Option</option>
+        </select>
+      </div>
+      <div class="column">
+        <label for="audio-devices">Select Microphone</label>
+        <select disabled id="audio-devices">
+          <option selected disabled>Choose Option</option>
+        </select>
+      </div> -->
+      <div class="column">
+        <label for="token">Participant Token</label>
+        <input type="text" id="token" name="token" />
+      </div>
+      <div class="column" style="display: flex; margin-top: 1.5rem">
+        <button class="button" style="margin: auto; width: 100%" id="join-button">Join Stage</button>
+      </div>
+      <div class="column" style="display: flex; margin-top: 1.5rem">
+        <button class="button" style="margin: auto; width: 100%" id="leave-button">Leave Stage</button>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- Local Participant -->
+    <div class="row local-container">
+      <video id="webcam" autoplay style="display: none"></video>
+      <div class="column" id="local-media"></div>
+      <div class="static-controls hidden" id="local-controls">
+        <button class="button" id="mic-control">Mute Mic</button>
+        <button class="button" id="camera-control">Mute Camera</button>
+      </div>
+    </div>
+
+    <div class="row local-container">
+      <canvas id="canvas" width="640px" height="480px"></canvas>
+    </div>
+    <div class="row local-container">
+      <div class="column-50">
+        <button class="button button-open" style="width: 640px" id="change-background-button">Use GenAI to change my background</button>
+      </div>
+    </div>
+
+    <canvas id="background" width="640px" height="480px" style="display: none"></canvas>
+
+    <hr style="margin-top: 5rem" />
+
+    <!-- Remote Participants -->
+    <div class="row">
+      <div id="remote-media"></div>
+    </div>
+
+    <section class="modal hidden">
+      <div>
+        <h3>Describe your background</h3>
+      </div>
+
+      <input type="text" id="genai-background-prompt" placeholder="beach with palm trees" autofocus />
+      <button class="btn" id="background-prompt-submit-btn">Submit</button>
+    </section>
+
+    <div class="overlay hidden"></div>
+    <!-- <button class="btn-open button">Open Modal</button> -->
+
+    <!-- Load all Desired Scripts -->
+    <!-- <script src="./helpers.js"></script> -->
+    <!-- <script src="./media-devices.js"></script> -->
+    <script src="./dist/bundle.js"></script>
+    <!-- <script src="./bundle.js"></script> -->
+  </body>
+</html>
