@@ -1,4 +1,4 @@
-## Amazon IVS Background Replacement Demo for Web
+## Amazon IVS Background Replacement Demo with Generative AI for Web
 
 A demo web application intended as an educational tool to demonstrate how you can do background replacement on Amazon IVS. This demo also demonstrates how to use to a generative AI prompt to replace your background.
 
