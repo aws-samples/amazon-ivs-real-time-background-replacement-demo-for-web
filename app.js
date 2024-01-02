@@ -314,25 +314,6 @@ async function getDevices() {
   return { videoDevices, audioDevices };
 }
 
-async function getCamera(deviceId) {
-  // Use Max Width and Height
-  return navigator.mediaDevices.getUserMedia({
-    video: {
-      deviceId: deviceId ? { exact: deviceId } : null,
-    },
-    audio: false,
-  });
-}
-
-async function getMic(deviceId) {
-  return navigator.mediaDevices.getUserMedia({
-    video: false,
-    audio: {
-      deviceId: deviceId ? { exact: deviceId } : null,
-    },
-  });
-}
-
 function setupParticipant({ isLocal, id }) {
   console.log("setup participant");
   const groupId = isLocal ? "local-media" : "remote-media";
