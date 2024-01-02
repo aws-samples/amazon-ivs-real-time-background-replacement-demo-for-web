@@ -4,20 +4,31 @@
 // const { setupParticipant } = window;
 // const { initializeDeviceSelect, getCamera, getMic } = window;
 
-const { Stage, LocalStageStream, SubscribeType, StageEvents, ConnectionState, StreamType } = IVSBroadcastClient;
+const {
+  Stage,
+  LocalStageStream,
+  SubscribeType,
+  StageEvents,
+  ConnectionState,
+  StreamType,
+} = IVSBroadcastClient;
 const canvasElement = document.getElementById("canvas");
 const background = document.getElementById("background");
-const backgroundPromptInput = document.getElementById("genai-background-prompt");
-const backgroundChangeBtn = document.getElementById("background-prompt-submit-btn");
+const backgroundPromptInput = document.getElementById(
+  "genai-background-prompt"
+);
+const backgroundChangeBtn = document.getElementById(
+  "background-prompt-submit-btn"
+);
 
 const canvasCtx = canvasElement.getContext("2d", { willReadFrequently: true });
 const backgroundCtx = background.getContext("2d", { willReadFrequently: true });
 const video = document.getElementById("webcam");
 
 // For GenAI prompt to change background
-const modal = document.querySelector(".modal");
-const overlay = document.querySelector(".overlay");
-const openModalBtn = document.querySelector(".button-open");
+const modal = document.getElementById("modal");
+const overlay = document.getElementById("overlay");
+const openModalBtn = document.getElementById("button-open");
 
 import { ImageSegmenter, FilesetResolver } from "@mediapipe/tasks-vision";
 
@@ -27,8 +38,6 @@ let joinButton = document.getElementById("join-button");
 let leaveButton = document.getElementById("leave-button");
 
 let controls = document.getElementById("local-controls");
-let audioDevicesList = document.getElementById("audio-devices");
-let videoDevicesList = document.getElementById("video-devices");
 
 // Stage management
 let stage;
@@ -41,7 +50,9 @@ let micStageStream;
 let imageSegmenter;
 let lastWebcamTime = -1;
 
-const init = async (srcImageUrl = "https://d1l5n2avb89axj.cloudfront.net/beach.jpg") => {
+const init = async (
+  srcImageUrl = "https://d1l5n2avb89axj.cloudfront.net/beach.jpg"
+) => {
   localCamera = await navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false,
@@ -81,7 +92,9 @@ const joinStage = async (segmentationStream) => {
     video: false,
     audio: true,
   });
-  cameraStageStream = new LocalStageStream(segmentationStream.getVideoTracks()[0]);
+  cameraStageStream = new LocalStageStream(
+    segmentationStream.getVideoTracks()[0]
+  );
   micStageStream = new LocalStageStream(localMic.getAudioTracks()[0]);
 
   const strategy = {
@@ -115,19 +128,26 @@ const joinStage = async (segmentationStream) => {
     console.log("Participant Joined:", participant);
   });
 
-  stage.on(StageEvents.STAGE_PARTICIPANT_STREAMS_ADDED, (participant, streams) => {
-    console.log("Participant Media Added: ", participant, streams);
+  stage.on(
+    StageEvents.STAGE_PARTICIPANT_STREAMS_ADDED,
+    (participant, streams) => {
+      console.log("Participant Media Added: ", participant, streams);
 
-    let streamsToDisplay = streams;
+      let streamsToDisplay = streams;
 
-    if (participant.isLocal) {
-      // Ensure to exclude local audio streams, otherwise echo will occur
-      streamsToDisplay = streams.filter((stream) => stream.streamType === StreamType.VIDEO);
+      if (participant.isLocal) {
+        // Ensure to exclude local audio streams, otherwise echo will occur
+        streamsToDisplay = streams.filter(
+          (stream) => stream.streamType === StreamType.VIDEO
+        );
+      }
+
+      const videoEl = setupParticipant(participant);
+      streamsToDisplay.forEach((stream) =>
+        videoEl.srcObject.addTrack(stream.mediaStreamTrack)
+      );
     }
-
-    const videoEl = setupParticipant(participant);
-    streamsToDisplay.forEach((stream) => videoEl.srcObject.addTrack(stream.mediaStreamTrack));
-  });
+  );
 
   stage.on(StageEvents.STAGE_PARTICIPANT_LEFT, (participant) => {
     console.log("Participant Left: ", participant);
@@ -155,34 +175,68 @@ const leaveStage = async () => {
 };
 
 function replaceBackground(result) {
-  let imageData = canvasCtx.getImageData(0, 0, video.videoWidth, video.videoHeight).data;
-  let backgroundData = backgroundCtx.getImageData(0, 0, video.videoWidth, video.videoHeight).data;
+  // Get pixel data from canvas containing original video frame
+  let imageData = canvasCtx.getImageData(
+    0,
+    0,
+    video.videoWidth,
+    video.videoHeight
+  ).data;
+
+  // Get pixel data from canvas for background image
+  let backgroundData = backgroundCtx.getImageData(
+    0,
+    0,
+    video.videoWidth,
+    video.videoHeight
+  ).data;
+
+  // Get mask from result - contains values 0-1 for foreground vs background
   const mask = result.categoryMask.getAsFloat32Array();
   let j = 0;
 
+  // Loop through each pixel in mask
   for (let i = 0; i < mask.length; ++i) {
+    // Convert float mask value to 0-255 integer
     const maskVal = Math.round(mask[i] * 255.0);
 
+    // Increment index by 4 for RGBA
     j += 4;
+
+    // If mask pixel is background...
     if (maskVal < 255) {
+      // Copy pixel colors from imageData to backgroundData
       backgroundData[j] = imageData[j];
       backgroundData[j + 1] = imageData[j + 1];
       backgroundData[j + 2] = imageData[j + 2];
       backgroundData[j + 3] = imageData[j + 3];
     }
   }
+
+  // Create new ImageData from modified background pixel data
   const uint8Array = new Uint8ClampedArray(backgroundData.buffer);
-  const dataNew = new ImageData(uint8Array, video.videoWidth, video.videoHeight);
+  const dataNew = new ImageData(
+    uint8Array,
+    video.videoWidth,
+    video.videoHeight
+  );
+
+  // Draw new background to canvas
   canvasCtx.putImageData(dataNew, 0, 0);
+
+  // Request next frame
   window.requestAnimationFrame(renderVideoToCanvas);
 }
 
 const createImageSegmenter = async () => {
-  const audio = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.2/wasm");
+  const audio = await FilesetResolver.forVisionTasks(
+    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.2/wasm"
+  );
 
   imageSegmenter = await ImageSegmenter.createFromOptions(audio, {
     baseOptions: {
-      modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite",
+      modelAssetPath:
+        "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite",
       delegate: "GPU",
     },
     runningMode: "VIDEO",
@@ -207,7 +261,9 @@ const renderVideoToCanvas = async () => {
   imageSegmenter.segmentForVideo(video, startTimeMs, replaceBackground);
 };
 
-const initBackgroundCanvas = (srcImageUrl = "https://d1l5n2avb89axj.cloudfront.net/beach.jpg") => {
+const initBackgroundCanvas = (
+  srcImageUrl = "https://d1l5n2avb89axj.cloudfront.net/beach.jpg"
+) => {
   let img = new Image();
   img.src = srcImageUrl;
   img.crossOrigin = "Anonymous";
@@ -297,7 +353,9 @@ function teardownParticipant({ isLocal, id }) {
   const groupContainer = document.getElementById(groupId);
   const participantContainerId = isLocal ? "local" : id;
 
-  const participantDiv = document.getElementById(participantContainerId + "-container");
+  const participantDiv = document.getElementById(
+    participantContainerId + "-container"
+  );
   if (!participantDiv) {
     return;
   }
@@ -357,7 +415,12 @@ backgroundChangeBtn.addEventListener("click", async function (event) {
   // Get the input field's text value
   const prompt = backgroundPromptInput.value;
   // Create a JSON object with the text value
-  const requestBody = { prompt, width: 640, height: 480, num_images_per_prompt: 1 };
+  const requestBody = {
+    prompt,
+    width: 640,
+    height: 480,
+    num_images_per_prompt: 1,
+  };
 
   // Convert the JSON object to a JSON string
   var requestBodyJSON = JSON.stringify(requestBody);
