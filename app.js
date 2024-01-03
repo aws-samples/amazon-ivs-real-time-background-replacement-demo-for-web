@@ -1,9 +1,5 @@
 /*! Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved. SPDX-License-Identifier: Apache-2.0 */
 
-// All helpers are expose on 'media-devices.js' and 'dom.js'
-// const { setupParticipant } = window;
-// const { initializeDeviceSelect, getCamera, getMic } = window;
-
 const {
   Stage,
   LocalStageStream,
@@ -273,23 +269,6 @@ const initBackgroundCanvas = (
     backgroundCtx.drawImage(img, 0, 0);
   };
 };
-
-async function initializeDeviceSelect() {
-  const videoSelectEl = document.getElementById("video-devices");
-  videoSelectEl.disabled = false;
-
-  const { videoDevices, audioDevices } = await getDevices();
-  videoDevices.forEach((device, index) => {
-    videoSelectEl.options[index] = new Option(device.label, device.deviceId);
-  });
-
-  const audioSelectEl = document.getElementById("audio-devices");
-
-  audioSelectEl.disabled = false;
-  audioDevices.forEach((device, index) => {
-    audioSelectEl.options[index] = new Option(device.label, device.deviceId);
-  });
-}
 
 /**
  * Returns all devices available on the current device
