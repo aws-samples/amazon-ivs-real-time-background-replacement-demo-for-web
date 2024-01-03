@@ -270,29 +270,6 @@ const initBackgroundCanvas = (
   };
 };
 
-/**
- * Returns all devices available on the current device
- */
-async function getDevices() {
-  // Prevents issues on Safari/FF so devices are not blank
-  await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  // Get all video devices
-  const videoDevices = devices.filter((d) => d.kind === "videoinput");
-  if (!videoDevices.length) {
-    console.error("No video devices found.");
-  }
-
-  // Get all audio devices
-  const audioDevices = devices.filter((d) => d.kind === "audioinput");
-  if (!audioDevices.length) {
-    console.error("No audio devices found.");
-  }
-
-  return { videoDevices, audioDevices };
-}
-
 function setupParticipant({ isLocal, id }) {
   console.log("setup participant");
   const groupId = isLocal ? "local-media" : "remote-media";
