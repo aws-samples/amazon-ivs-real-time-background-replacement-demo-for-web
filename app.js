@@ -46,9 +46,7 @@ let micStageStream;
 let imageSegmenter;
 let lastWebcamTime = -1;
 
-const init = async (
-  srcImageUrl = "https://d1l5n2avb89axj.cloudfront.net/beach.jpg"
-) => {
+const init = async () => {
   localCamera = await navigator.mediaDevices.getUserMedia({
     video: true,
     audio: false,
@@ -63,7 +61,7 @@ const init = async (
     leaveStage();
   });
 
-  initBackgroundCanvas(srcImageUrl);
+  // initBackgroundCanvas(base64String);
 
   video.srcObject = localCamera;
   video.addEventListener("loadeddata", renderVideoToCanvas);
@@ -245,6 +243,7 @@ const renderVideoToCanvas = async () => {
     window.requestAnimationFrame(renderVideoToCanvas);
     return;
   }
+
   lastWebcamTime = video.currentTime;
   canvasCtx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
@@ -257,21 +256,16 @@ const renderVideoToCanvas = async () => {
   imageSegmenter.segmentForVideo(video, startTimeMs, replaceBackground);
 };
 
-const initBackgroundCanvas = (
-  srcImageUrl = "https://d1l5n2avb89axj.cloudfront.net/beach.jpg"
-) => {
+const initBackgroundCanvas = (base64Image) => {
   let img = new Image();
-  img.src = srcImageUrl;
-  img.crossOrigin = "Anonymous";
-
   img.onload = () => {
     backgroundCtx.clearRect(0, 0, canvas.width, canvas.height);
     backgroundCtx.drawImage(img, 0, 0);
   };
+  img.src = "data:image/png;base64," + base64Image;
 };
 
 function setupParticipant({ isLocal, id }) {
-  console.log("setup participant");
   const groupId = isLocal ? "local-media" : "remote-media";
   const groupContainer = document.getElementById(groupId);
 
@@ -344,7 +338,7 @@ const openModal = function () {
 // open modal event
 openModalBtn.addEventListener("click", openModal);
 
-backgroundChangeBtn.addEventListener("click", async function (event) {
+backgroundChangeBtn.addEventListener("click", async function () {
   backgroundChangeBtn.disabled = true;
   overlay.removeEventListener("click", closeModal);
   backgroundChangeBtn.innerText = "Please wait. This can take up to 10 sec.";
@@ -355,27 +349,23 @@ backgroundChangeBtn.addEventListener("click", async function (event) {
   const requestBody = {
     prompt,
     width: 640,
-    height: 480,
-    num_images_per_prompt: 1,
+    height: 512,
   };
 
   // Convert the JSON object to a JSON string
   var requestBodyJSON = JSON.stringify(requestBody);
-
+  console.log(requestBodyJSON);
   // Make a POST request using the Fetch API
-  const response = await fetch("<INSERT YOUR LAMBDA URL HERE>", {
+  const response = await fetch("INSERT LAMBDA URL HERE", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: requestBodyJSON,
   });
-
   const json = await response.json();
-
   closeModal();
-
-  init(json.image_url);
+  initBackgroundCanvas(json.base64_image);
   backgroundChangeBtn.disabled = false;
   openModalBtn.addEventListener("click", openModal);
   backgroundChangeBtn.innerText = "Submit";

@@ -12,7 +12,7 @@ body {
   position: relative;
 }
 
-.modal {
+#modal {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,20 +28,24 @@ body {
   border-radius: 15px;
 }
 
-.modal .flex {
+#modal.hidden {
+  display: none;
+}
+
+#modal {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.modal input {
+#modal input {
   padding: 0.7rem 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 0.9em;
 }
 
-.modal p {
+#modal p {
   font-size: 0.9rem;
   color: #777;
   margin: 0.4rem 0 0.2rem;
@@ -74,7 +78,7 @@ body {
   padding: 0.5rem 0.7rem;
 }
 
-.overlay {
+#overlay {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -85,8 +89,4 @@ body {
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(3px);
   z-index: 1;
-}
-
-.hidden {
-  display: none;
 }
