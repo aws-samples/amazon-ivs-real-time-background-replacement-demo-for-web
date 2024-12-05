@@ -2,7 +2,7 @@
 
 A demo web application intended as an educational tool to demonstrate how you can do background replacement on Amazon IVS. This demo also demonstrates how to use to a generative AI prompt to replace your background.
 
-Note that you will need to set up your own AWS Lambda to use the generative AI prompt feature for background replacement. See this [blog post](#) for instructions on how to do so.
+Note that you will need to set up your own AWS Lambda to use the generative AI prompt feature for background replacement. See this [blog post](https://community.aws/content/2e3vGcf33zG73nu7fDKncb3D6kL/how-to-use-genai-to-replace-background-amazon-ivs) for instructions on how to do so.
 
 **This project is intended for education purposes only and not for production usage.**
 
